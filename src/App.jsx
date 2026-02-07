@@ -802,6 +802,33 @@ function App() {
         </div>
 
       </div>
+
+      {/* API Status Debug Footer (Production only helps debug missing ENV) */}
+      <div style={{
+        position: 'fixed',
+        bottom: '10px',
+        right: '10px',
+        padding: '5px 12px',
+        background: 'rgba(0,0,0,0.6)',
+        borderRadius: '20px',
+        fontSize: '10px',
+        color: '#94a3b8',
+        display: 'flex',
+        gap: '15px',
+        zIndex: 9999,
+        backdropFilter: 'blur(5px)',
+        border: '1px solid rgba(255,255,255,0.1)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: YOUTUBE_API_KEY ? '#22c55e' : '#ef4444' }}></div>
+          YouTube: {YOUTUBE_API_KEY ? 'CONNECTED' : 'MISSING'}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: GEMINI_API_KEY ? '#22c55e' : '#ef4444' }}></div>
+          Gemini: {GEMINI_API_KEY ? 'CONNECTED' : 'MISSING'}
+        </div>
+        <div style={{ opacity: 0.5 }}>Build: 05:00AM</div>
+      </div>
     </div>
   );
 }
