@@ -10,6 +10,10 @@ import { generateVoiceNarration } from './services/geminiVoice';
 const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
+// Deployment Debugging: Ensure keys are available
+if (!YOUTUBE_API_KEY) console.error("FATAL: VITE_YOUTUBE_API_KEY is missing. Check Netlify Environment Variables.");
+if (!GEMINI_API_KEY) console.error("FATAL: VITE_GEMINI_API_KEY is missing. Check Netlify Environment Variables.");
+
 function App() {
   const [videos, setVideos] = useState([]);
   const [seenIds, setSeenIds] = useState(new Set());
