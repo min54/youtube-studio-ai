@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import axios from 'axios';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import JSZip from 'jszip';
@@ -159,6 +159,7 @@ function App() {
         script: 'AI가 내용을 분석하고 있습니다...',
         imagePrompts: [],
         images: Array(10).fill(null),
+        selectedHeadlineIndex: 0,
         isGenerating: false,
         isGeneratingVoice: false
       }));
@@ -403,6 +404,7 @@ function App() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
+
 
   // If no videos, show landing
   if (videos.length === 0) {
@@ -675,7 +677,7 @@ function App() {
               <div className="panel-title">🔍 SEARCH RESULTS</div>
             </div>
             <div className="news-list">
-              {videos.map((v, i) => (
+              {videos.map((v) => (
                 <div
                   key={v.id.videoId}
                   className={`news-item ${selectedVideoId === v.id.videoId ? 'active' : ''}`}
@@ -794,6 +796,7 @@ function App() {
             ))}
           </div>
         </div>
+
       </div>
     </div>
   );
