@@ -534,34 +534,8 @@ function App() {
             <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '0.9rem' }}>
               <strong>💡 AI Analysis:</strong> {selectedVideo?.analysis}
             </div>
-            <div className="script-text-container">
-              {(() => {
-                if (!selectedVideo?.script) return null;
-
-                // Split script by [n] markers
-                const parts = selectedVideo.script.split(/(\[\d+\])/g);
-                return parts.map((part, index) => {
-                  const match = part.match(/\[(\d+)\]/);
-                  if (match) {
-                    const imgIdx = parseInt(match[1]) - 1;
-                    const imgUrl = selectedVideo.images?.[imgIdx];
-
-                    return (
-                      <div key={index} className="script-image-container">
-                        {imgUrl ? (
-                          <img src={imgUrl} alt={`Scene ${imgIdx + 1}`} className="script-inline-image" />
-                        ) : (
-                          <div className="script-image-placeholder">
-                            <div className="spinner" style={{ marginRight: '10px' }}></div>
-                            Scene {imgIdx + 1} Generating...
-                          </div>
-                        )}
-                      </div>
-                    );
-                  }
-                  return <span key={index}>{part}</span>;
-                });
-              })()}
+            <div style={{ whiteSpace: 'pre-wrap' }}>
+              {selectedVideo?.script}
             </div>
 
             {/* Voice Generation Section */}
