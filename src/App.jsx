@@ -586,13 +586,25 @@ function App() {
                     cursor: (selectedVideo?.isGeneratingVoice || !selectedVideo?.script || selectedVideo?.script === 'AI가 내용을 분석하고 있습니다...') ? 'not-allowed' : 'pointer',
                     opacity: (selectedVideo?.isGeneratingVoice || !selectedVideo?.script || selectedVideo?.script === 'AI가 내용을 분석하고 있습니다...') ? 0.6 : 1,
                     transition: 'all 0.2s',
-                    boxShadow: selectedVideo?.audioUrl ? '0 4px 12px rgba(16,185,129,0.3)' : 'none'
+                    boxShadow: selectedVideo?.audioUrl ? '0 4px 12px rgba(16,185,129,0.3)' : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px'
                   }}
                 >
-                  {selectedVideo?.isGeneratingVoice ? '🎙️ 생성 중...'
-                    : (!selectedVideo?.script || selectedVideo?.script === 'AI가 내용을 분석하고 있습니다...') ? '⏳ 음성 생성 준비 중...'
-                      : (selectedVideo?.script === '대본 생성 실패' || selectedVideo?.script === '내용 없음') ? '❌ 대본 없음'
-                        : selectedVideo?.audioUrl ? '✅ 음성 재생성' : '🎙️ 음성 생성'}
+                  {selectedVideo?.isGeneratingVoice ? (
+                    <>
+                      <div className="btn-spinner"></div>
+                      🎙️ 음성 생성 중...
+                    </>
+                  ) : (
+                    <>
+                      {(!selectedVideo?.script || selectedVideo?.script === 'AI가 내용을 분석하고 있습니다...') ? '⏳ 준비 중...'
+                        : (selectedVideo?.script === '대본 생성 실패' || selectedVideo?.script === '내용 없음') ? '❌ 대본 없음'
+                          : selectedVideo?.audioUrl ? '✅ 음성 재생성' : '🎙️ 음성 생성'}
+                    </>
+                  )}
                 </button>
 
                 {selectedVideo?.audioUrl && (
