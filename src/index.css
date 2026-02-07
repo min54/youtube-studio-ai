@@ -732,9 +732,48 @@ body {
 }
 
 .script-text-container {
-  line-height: 1.8;
+  line-height: 2;
   white-space: pre-wrap;
   color: #e2e8f0;
+  font-size: 1.1rem;
+}
+
+.script-annotation {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: var(--accent-color);
+  color: var(--primary-bg);
+  font-size: 0.7rem;
+  font-weight: 800;
+  border-radius: 50%;
+  margin: 0 4px;
+  vertical-align: top;
+  cursor: help;
+  user-select: none;
+  /* 드래그 및 복사 방지 */
+  box-shadow: 0 0 8px var(--accent-glow);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.script-annotation:hover {
+  transform: scale(1.2);
+  background: white;
 }
 
 .script-image-container {
