@@ -768,8 +768,14 @@ function App() {
                   </>
                 ) : (
                   <div className="gallery-placeholder">
-                    <div className="spinner"></div>
-                    <div style={{ fontSize: '0.8rem', marginTop: '5px' }}>Scene {idx + 1}</div>
+                    {selectedVideo?.isGenerating ? (
+                      <>
+                        <div className="spinner"></div>
+                        <div style={{ fontSize: '0.8rem', marginTop: '5px' }}>Generating...</div>
+                      </>
+                    ) : (
+                      <div style={{ opacity: 0.3 }}>{idx + 1}</div>
+                    )}
                   </div>
                 )}
               </div>
