@@ -20,6 +20,12 @@ function App() {
   const [imageStyle, setImageStyle] = useState('doodle'); // 'doodle' or 'realistic'
   const [searchTerm, setSearchTerm] = useState('뉴스'); // Default search term
 
+  const decodeHtml = (html) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  };
+
   // Ref for AbortController to stop image generation
   const abortControllerRef = useRef(null);
 
@@ -144,8 +150,8 @@ function App() {
       // Initialize videos state immediately
       const initialVideos = selectedItems.map(v => ({
         id: v.id,
-        title: v.snippet.title,
-        description: v.snippet.description,
+        title: decodeHtml(v.snippet.title),
+        description: decodeHtml(v.snippet.description),
         thumbnail: v.snippet.thumbnails.medium.url,
         publishedAt: v.snippet.publishedAt,
         stats: { viewCount: '-', likeCount: '-', commentCount: '-' },
@@ -172,7 +178,7 @@ function App() {
           return {
             ...iv,
             stats: detail.statistics,
-            description: detail.snippet.description // Get full description if available
+            description: decodeHtml(detail.snippet.description) // Get full description if available
           };
         }
         return iv;
@@ -302,6 +308,16 @@ function App() {
   const handleRegenerateSingleImage = async (video, imageIndex) => {
     if (!video || !video.imagePrompts[imageIndex]) return;
 
+    // Show loading state by clearing current image
+    setVideos(prev => prev.map(v => {
+      if (v.id.videoId === video.id.videoId) {
+        const newImages = [...v.images];
+        newImages[imageIndex] = null;
+        return { ...v, images: newImages };
+      }
+      return v;
+    }));
+
     const controller = new AbortController();
     const promptText = video.imagePrompts[imageIndex];
 
@@ -320,6 +336,8 @@ function App() {
     } catch (e) {
       console.error("Single regeneration failed after retries:", e);
       alert('이미지 생성에 실패했습니다. 다시 시도해 주세요.');
+      // Optionally restore previous image or leave as null? 
+      // For now, let's leave it null to indicate failure or wait for user to try again
     }
   };
 
@@ -516,8 +534,34 @@ function App() {
             <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '0.9rem' }}>
               <strong>💡 AI Analysis:</strong> {selectedVideo?.analysis}
             </div>
-            <div>
-              {selectedVideo?.script}
+            <div className="script-text-container">
+              {(() => {
+                if (!selectedVideo?.script) return null;
+
+                // Split script by [n] markers
+                const parts = selectedVideo.script.split(/(\[\d+\])/g);
+                return parts.map((part, index) => {
+                  const match = part.match(/\[(\d+)\]/);
+                  if (match) {
+                    const imgIdx = parseInt(match[1]) - 1;
+                    const imgUrl = selectedVideo.images?.[imgIdx];
+
+                    return (
+                      <div key={index} className="script-image-container">
+                        {imgUrl ? (
+                          <img src={imgUrl} alt={`Scene ${imgIdx + 1}`} className="script-inline-image" />
+                        ) : (
+                          <div className="script-image-placeholder">
+                            <div className="spinner" style={{ marginRight: '10px' }}></div>
+                            Scene {imgIdx + 1} Generating...
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+                  return <span key={index}>{part}</span>;
+                });
+              })()}
             </div>
 
             {/* Voice Generation Section */}
@@ -726,7 +770,8 @@ function App() {
                   </>
                 ) : (
                   <div className="gallery-placeholder">
-                    {idx + 1}
+                    <div className="spinner"></div>
+                    <div style={{ fontSize: '0.8rem', marginTop: '5px' }}>Scene {idx + 1}</div>
                   </div>
                 )}
               </div>
